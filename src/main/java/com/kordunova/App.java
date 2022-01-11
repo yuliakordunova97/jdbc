@@ -16,23 +16,22 @@ public class App {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
         Class.forName("com.mysql.cj.jdbc.Driver");
+
+        getAllItemsFromDepartment();
+        getAllItemsFromEmployeeWhereIDBoss3();
+        getAllItemsFromEmployeeWhereIBonusIsNotNull();
+        getAllItemsFromEmployeeWhereIBonusIsNull();
+        getAllItemsWhereSalaryMore3000();
+    }
+
+    private static void getAllItemsFromDepartment() throws SQLException {
         Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-
-        Statement statement1 = connection.createStatement();
-        Statement statement2 = connection.createStatement();
-        Statement statement3 = connection.createStatement();
-        Statement statement4 = connection.createStatement();
-        Statement statement5 = connection.createStatement();
-        ResultSet resultSet1 = statement1.executeQuery("select * from department");
-        ResultSet resultSet2 = statement2.executeQuery("select * from employee where id_boss= 3");
-        ResultSet resultSet3 = statement3.executeQuery("select * from employee where bonus is not null");
-        ResultSet resultSet4 = statement4.executeQuery("select * from employee where bonus is null");
-        ResultSet resultSet5 = statement5.executeQuery("select * from salary_grade where low_salary > 3000");
-
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from department");
 
         List<Department> departmentList = new ArrayList<>();
-        while (resultSet1.next()){
-            Department department = buildDepartment(resultSet1);
+        while (resultSet.next()){
+            Department department = buildDepartment(resultSet);
             departmentList.add(department);
         }
         System.out.println("Depart list: ");
@@ -40,9 +39,19 @@ public class App {
             System.out.println(d);
         }
 
+        resultSet.close();
+        statement.close();
+        connection.close();
+    }
+
+    private static void getAllItemsFromEmployeeWhereIDBoss3() throws SQLException{
+        Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from employee where id_boss= 3");
+
         List<Employee> employeeList = new ArrayList<>();
-        while (resultSet2.next()){
-            Employee employee = buildEmployee(resultSet2);
+        while (resultSet.next()){
+            Employee employee = buildEmployee(resultSet);
             employeeList.add(employee);
         }
         System.out.println();
@@ -51,8 +60,19 @@ public class App {
             System.out.println(employee);
         }
 
-        while (resultSet3.next()){
-            Employee employee = buildEmployee(resultSet3);
+        resultSet.close();
+        statement.close();
+        connection.close();
+    }
+
+    private static void getAllItemsFromEmployeeWhereIBonusIsNotNull() throws SQLException{
+        Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from employee where bonus is not null");
+
+        List<Employee> employeeList = new ArrayList<>();
+        while (resultSet.next()){
+            Employee employee = buildEmployee(resultSet);
             employeeList.add(employee);
         }
         System.out.println();
@@ -61,8 +81,19 @@ public class App {
             System.out.println(employee);
         }
 
-        while (resultSet4.next()){
-            Employee employee = buildEmployee(resultSet4);
+        resultSet.close();
+        statement.close();
+        connection.close();
+    }
+
+    private static void getAllItemsFromEmployeeWhereIBonusIsNull() throws SQLException{
+        Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from employee where bonus is null");
+
+        List<Employee> employeeList = new ArrayList<>();
+        while (resultSet.next()){
+            Employee employee = buildEmployee(resultSet);
             employeeList.add(employee);
         }
         System.out.println();
@@ -71,9 +102,19 @@ public class App {
             System.out.println(employee);
         }
 
+        resultSet.close();
+        statement.close();
+        connection.close();
+    }
+
+    private static void getAllItemsWhereSalaryMore3000() throws SQLException{
+        Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from salary_grade where low_salary > 3000");
+
         List<SalaryGrade> salary_gradeList = new ArrayList<>();
-        while (resultSet5.next()){
-            SalaryGrade salary_grade = buildSalary_grade(resultSet5);
+        while (resultSet.next()){
+            SalaryGrade salary_grade = buildSalaryGrade(resultSet);
             salary_gradeList.add(salary_grade);
         }
         System.out.println();
@@ -82,51 +123,37 @@ public class App {
             System.out.println(s);
         }
 
-        resultSet1.close();
-        statement1.close();
-
-        resultSet2.close();
-        statement2.close();
-
-        resultSet3.close();
-        statement3.close();
-
-        resultSet4.close();
-        statement4.close();
-
-        resultSet5.close();
-        statement5.close();
-
+        resultSet.close();
+        statement.close();
         connection.close();
     }
 
-
     private static Department buildDepartment(ResultSet resultSet) throws SQLException {
         Department department = new Department();
-        department.setId(resultSet.getInt(1));
-        department.setName(resultSet.getString(2));
-        department.setCity(resultSet.getString(3));
+        department.setId(resultSet.getInt("id"));
+        department.setName(resultSet.getString("namee"));
+        department.setCity(resultSet.getString("city"));
         return department;
     }
     private static Employee buildEmployee(ResultSet resultSet) throws SQLException {
         Employee employee = new Employee();
 
-        employee.setId(resultSet.getInt(1));
-        employee.setFirstname(resultSet.getString(2));
-        employee.setLastname(resultSet.getString(3));
-        employee.setPosition(resultSet.getString(4));
-        employee.setDate_employment(resultSet.getDate(5));
-        employee.setId_department(resultSet.getInt(6));
-        employee.setId_boss(resultSet.getInt(7));
-        employee.setRate(resultSet.getInt(8));
-        employee.setBonus(resultSet.getInt(9));
+        employee.setId(resultSet.getInt("id"));
+        employee.setFirstName(resultSet.getString("firstName"));
+        employee.setLastName(resultSet.getString("lastName"));
+        employee.setPosition(resultSet.getString("position"));
+        employee.setDateEmployment(resultSet.getDate("date_employment"));
+        employee.setIdDepartment(resultSet.getInt("id_department"));
+        employee.setIdBoss(resultSet.getInt("id_boss"));
+        employee.setRate(resultSet.getInt("rate"));
+        employee.setBonus(resultSet.getInt("bonus"));
         return employee;
     }
-    private static SalaryGrade buildSalary_grade(ResultSet resultSet) throws SQLException {
+    private static SalaryGrade buildSalaryGrade(ResultSet resultSet) throws SQLException {
         SalaryGrade salary_grade = new SalaryGrade();
-        salary_grade.setId(resultSet.getInt(1));
-        salary_grade.setLow_salary(resultSet.getInt(2));
-        salary_grade.setHight_salary(resultSet.getInt(3));
+        salary_grade.setId(resultSet.getInt("id"));
+        salary_grade.setLowSalary(resultSet.getInt("low_salary"));
+        salary_grade.setHightSalary(resultSet.getInt("hight_salary"));
 
         return salary_grade;
     }
