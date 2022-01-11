@@ -1,6 +1,8 @@
-import tabels.Department;
-import tabels.Employee;
-import tabels.Salary_Grade;
+package com.kordunova;
+
+import com.kordunova.tabels.Department;
+import com.kordunova.tabels.Employee;
+import com.kordunova.tabels.SalaryGrade;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -69,14 +71,14 @@ public class App {
             System.out.println(employee);
         }
 
-        List<Salary_Grade> salary_gradeList = new ArrayList<>();
+        List<SalaryGrade> salary_gradeList = new ArrayList<>();
         while (resultSet5.next()){
-            Salary_Grade salary_grade = buildSalary_grade(resultSet5);
+            SalaryGrade salary_grade = buildSalary_grade(resultSet5);
             salary_gradeList.add(salary_grade);
         }
         System.out.println();
         System.out.println("According to Salary grade, low salary is: ");
-        for(Salary_Grade s: salary_gradeList){
+        for(SalaryGrade s: salary_gradeList){
             System.out.println(s);
         }
 
@@ -120,8 +122,8 @@ public class App {
         employee.setBonus(resultSet.getInt(9));
         return employee;
     }
-    private static Salary_Grade buildSalary_grade(ResultSet resultSet) throws SQLException {
-        Salary_Grade salary_grade = new Salary_Grade();
+    private static SalaryGrade buildSalary_grade(ResultSet resultSet) throws SQLException {
+        SalaryGrade salary_grade = new SalaryGrade();
         salary_grade.setId(resultSet.getInt(1));
         salary_grade.setLow_salary(resultSet.getInt(2));
         salary_grade.setHight_salary(resultSet.getInt(3));

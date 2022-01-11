@@ -1,4 +1,4 @@
-package tabels;
+package com.kordunova.tabels;
 
 import lombok.Data;
 
