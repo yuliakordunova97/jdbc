@@ -6,5 +6,5 @@ import lombok.Data;
 public class SalaryGrade {
     private int id;
     private int lowSalary;
-    private int hightSalary;
+    private int highSalary;
 }
