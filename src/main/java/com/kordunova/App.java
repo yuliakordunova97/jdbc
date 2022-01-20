@@ -55,18 +55,22 @@ public class App {
 
     private static List<Department> getAllItemsFromDepartment() {
         List<Department> departmentList = new ArrayList<>();
-        try {
+        try (
             Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select id, namee,city from department");
+        ){
+            String sql = "select id, namee,city from department";
+            ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                Department department = buildDepartment(resultSet);
+                Department department = new Department();
+                department.setId(resultSet.getInt("id"));
+                department.setName(resultSet.getString("namee"));
+                department.setCity(resultSet.getString("city"));
                 departmentList.add(department);
             }
             resultSet.close();
-            statement.close();
-            connection.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -74,125 +78,119 @@ public class App {
     }
 
     private static List<Employee> getAllItemsFromEmployeeWhereIDBoss3() {
-        List<Employee> employeeList = new ArrayList<>();
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select id, firstname, lastname,position, date_employment, id_department, id_boss, rate, bonus from employee where id_boss= 3");
+        List<Employee> employees = new ArrayList<>();
+        try ( Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+              Statement statement = connection.createStatement();
+        ){
+
+            String sql = "select id, firstname, lastname,position, date_employment,"+
+                    " id_department, id_boss, rate, bonus from employee where id_boss= 3";
+            ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                Employee employee = buildEmployee(resultSet);
-                employeeList.add(employee);
+                Employee employee = new Employee();
+                employee.setId(resultSet.getInt("id"));
+                employee.setFirstName(resultSet.getString("firstName"));
+                employee.setLastName(resultSet.getString("lastName"));
+                employee.setPosition(resultSet.getString("position"));
+                employee.setDateEmployment(resultSet.getDate("date_employment"));
+                employee.setIdDepartment(resultSet.getInt("id_department"));
+                employee.setIdBoss(resultSet.getInt("id_boss"));
+                employee.setRate(resultSet.getInt("rate"));
+                employee.setBonus(resultSet.getInt("bonus"));
+                employees.add(employee);
             }
             resultSet.close();
-            statement.close();
-            connection.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return employeeList;
+        return employees;
     }
 
     private static List<Employee> getAllItemsFromEmployeeWhereIBonusIsNotNull() {
-        List<Employee> employeeList2 = new ArrayList<>();
-        try {
+        List<Employee> employees = new ArrayList<>();
+        try (
             Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select id, firstname, lastname,position, date_employment, id_department, id_boss, rate, bonus from employee where bonus is not null");
+        ){
+            String sql = "select id, firstname, lastname,position, date_employment,"+
+                    " id_department, id_boss, rate, bonus"+
+                    " from employee where bonus is not null";
+            ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                Employee employee = buildEmployee(resultSet);
-                employeeList2.add(employee);
+                Employee employee = new Employee();
+                employee.setId(resultSet.getInt("id"));
+                employee.setFirstName(resultSet.getString("firstName"));
+                employee.setLastName(resultSet.getString("lastName"));
+                employee.setPosition(resultSet.getString("position"));
+                employee.setDateEmployment(resultSet.getDate("date_employment"));
+                employee.setIdDepartment(resultSet.getInt("id_department"));
+                employee.setIdBoss(resultSet.getInt("id_boss"));
+                employee.setRate(resultSet.getInt("rate"));
+                employee.setBonus(resultSet.getInt("bonus"));
+                employees.add(employee);
             }
             resultSet.close();
-            statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return employeeList2;
+        return employees;
     }
 
     private static List<Employee> getAllItemsFromEmployeeWhereIBonusIsNull() {
 
-        List<Employee> employeeList3 = new ArrayList<>();
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select id, firstname, lastname,position, date_employment, id_department, id_boss, rate, bonus from employee where bonus is null");
+        List<Employee> employees = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             Statement statement = connection.createStatement();
+             ){
+
+            String sql = "select id, firstname, lastname,position, date_employment," +
+                    " id_department, id_boss, rate, bonus from employee where bonus is null";
+
+            ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                Employee employee = buildEmployee(resultSet);
-                employeeList3.add(employee);
+                Employee employee = new Employee();
+                employee.setId(resultSet.getInt("id"));
+                employee.setFirstName(resultSet.getString("firstName"));
+                employee.setLastName(resultSet.getString("lastName"));
+                employee.setPosition(resultSet.getString("position"));
+                employee.setDateEmployment(resultSet.getDate("date_employment"));
+                employee.setIdDepartment(resultSet.getInt("id_department"));
+                employee.setIdBoss(resultSet.getInt("id_boss"));
+                employee.setRate(resultSet.getInt("rate"));
+                employee.setBonus(resultSet.getInt("bonus"));
+                employees.add(employee);
             }
             resultSet.close();
-            statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return employeeList3;
+        return employees;
     }
 
     private static List<SalaryGrade> getAllItemsWhereSalaryMore3000() {
         List<SalaryGrade> salaryGradeList = new ArrayList<>();
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select id, low_salary, high_salary from salary_grade where low_salary > 3000");
+        try ( Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+              Statement statement = connection.createStatement();
+              ){
+
+            String sql = "select id, low_salary, high_salary from salary_grade where low_salary > 3000";
+            ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                SalaryGrade salaryGrade = buildSalaryGrade(resultSet);
+                SalaryGrade salaryGrade = new SalaryGrade();
+                salaryGrade.setId(resultSet.getInt("id"));
+                salaryGrade.setLowSalary(resultSet.getInt("low_salary"));
+                salaryGrade.setHighSalary(resultSet.getInt("high_salary"));
                 salaryGradeList.add(salaryGrade);
             }
             resultSet.close();
-            statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return salaryGradeList;
-    }
-
-    private static Department buildDepartment(ResultSet resultSet) {
-        Department department = new Department();
-        try {
-            department.setId(resultSet.getInt("id"));
-            department.setName(resultSet.getString("namee"));
-            department.setCity(resultSet.getString("city"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return department;
-    }
-
-    private static Employee buildEmployee(ResultSet resultSet) {
-        Employee employee = new Employee();
-        try {
-            employee.setId(resultSet.getInt("id"));
-            employee.setFirstName(resultSet.getString("firstName"));
-            employee.setLastName(resultSet.getString("lastName"));
-            employee.setPosition(resultSet.getString("position"));
-            employee.setDateEmployment(resultSet.getDate("date_employment"));
-            employee.setIdDepartment(resultSet.getInt("id_department"));
-            employee.setIdBoss(resultSet.getInt("id_boss"));
-            employee.setRate(resultSet.getInt("rate"));
-            employee.setBonus(resultSet.getInt("bonus"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return employee;
-    }
-
-    private static SalaryGrade buildSalaryGrade(ResultSet resultSet) {
-        SalaryGrade salaryGrade = new SalaryGrade();
-        try {
-            salaryGrade.setId(resultSet.getInt("id"));
-            salaryGrade.setLowSalary(resultSet.getInt("low_salary"));
-            salaryGrade.setHighSalary(resultSet.getInt("high_salary"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return salaryGrade;
     }
 }
